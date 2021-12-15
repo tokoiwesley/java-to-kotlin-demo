@@ -40,5 +40,12 @@ class MainActivity : AppCompatActivity() {
     /**
      * Search repositories of a particular github user after passing data to DisplayActivity
      */
-    fun listUserRepositories(view: View) {}
+    fun listUserRepositories(view: View) {
+        val githubUser = etGithubUser.text.toString()
+
+        val intent = Intent(this, DisplayActivity::class.java)
+        intent.putExtra(Constants.KEY_QUERY_TYPE, Constants.SEARCH_BY_USER)
+        intent.putExtra(Constants.KEY_GITHUB_USER, githubUser)
+        startActivity(intent)
+    }
 }
