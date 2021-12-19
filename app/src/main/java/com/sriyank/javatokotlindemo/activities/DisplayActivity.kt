@@ -1,63 +1,58 @@
 package com.sriyank.javatokotlindemo.activities
 
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.navigation.NavigationView
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.RecyclerView
-import com.sriyank.javatokotlindemo.adapters.DisplayAdapter
-import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
 import android.os.Bundle
-import com.sriyank.javatokotlindemo.R
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.sriyank.javatokotlindemo.retrofit.RetrofitClient
-import androidx.appcompat.app.ActionBarDrawerToggle
-import android.content.Intent
 import android.util.Log
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
-import com.sriyank.javatokotlindemo.activities.DisplayActivity
-import com.sriyank.javatokotlindemo.models.SearchResponse
-import io.realm.RealmResults
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
+import com.sriyank.javatokotlindemo.R
+import com.sriyank.javatokotlindemo.activities.DisplayActivity
+import com.sriyank.javatokotlindemo.adapters.DisplayAdapter
 import com.sriyank.javatokotlindemo.app.Constants
 import com.sriyank.javatokotlindemo.app.Util
 import com.sriyank.javatokotlindemo.models.Repository
+import com.sriyank.javatokotlindemo.models.SearchResponse
+import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
+import com.sriyank.javatokotlindemo.retrofit.RetrofitClient
 import io.realm.Realm
+import kotlinx.android.synthetic.main.activity_display.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
 class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private var mDrawerLayout: DrawerLayout? = null
-    private var mRecyclerView: RecyclerView? = null
     private var mDisplayAdapter: DisplayAdapter? = null
     private var browsedRepositories: List<Repository?>? = null
     private var mService: GithubAPIService? = null
     private var mRealm: Realm? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle("Showing Browsed Results")
-        mRecyclerView = findViewById(R.id.recyclerView)
+        supportActionBar!!.title = "Showing Browsed Results"
+
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        mRecyclerView.setLayoutManager(layoutManager)
+        recyclerView!!.layoutManager = layoutManager
+
         mService = RetrofitClient.getGithubAPIService()
         mRealm = Realm.getDefaultInstance()
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+
         navigationView.setNavigationItemSelectedListener(this)
-        mDrawerLayout = findViewById(R.id.drawer_layout)
         val drawerToggle = ActionBarDrawerToggle(
             this,
-            mDrawerLayout,
+            drawerLayout,
             toolbar,
             R.string.drawer_open,
             R.string.drawer_close
         )
-        mDrawerLayout.addDrawerListener(drawerToggle)
+        drawerLayout!!.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         val intent = intent
         if (intent.getIntExtra(Constants.KEY_QUERY_TYPE, -1) == Constants.SEARCH_BY_REPO) {
@@ -108,7 +103,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 if (response.isSuccessful) {
                     Log.i(TAG, "posts loaded from API $response")
                     browsedRepositories = response.body()!!.items
-                    if (browsedRepositories.size > 0) setupRecyclerView(browsedRepositories) else Util.showMessage(
+                    if ((browsedRepositories as MutableList<Repository>?)?.size!! > 0) setupRecyclerView(browsedRepositories) else Util.showMessage(
                         this@DisplayActivity,
                         "No Items Found"
                     )
@@ -126,7 +121,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun setupRecyclerView(items: List<Repository?>?) {
         mDisplayAdapter = DisplayAdapter(this, items)
-        mRecyclerView!!.adapter = mDisplayAdapter
+        recyclerView!!.adapter = mDisplayAdapter
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -159,11 +154,11 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun closeDrawer() {
-        mDrawerLayout!!.closeDrawer(GravityCompat.START)
+        drawerLayout!!.closeDrawer(GravityCompat.START)
     }
 
     override fun onBackPressed() {
-        if (mDrawerLayout!!.isDrawerOpen(GravityCompat.START)) closeDrawer() else {
+        if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) closeDrawer() else {
             super.onBackPressed()
             mRealm!!.close()
         }
