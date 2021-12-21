@@ -1,5 +1,6 @@
 package com.sriyank.javatokotlindemo.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -19,6 +20,7 @@ import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
 import com.sriyank.javatokotlindemo.retrofit.RetrofitClient
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_display.*
+import kotlinx.android.synthetic.main.header.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +38,8 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Showing Browsed Results"
+
+        setAppUsername()
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -63,6 +67,13 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             val githubUser = intent.getStringExtra(Constants.KEY_GITHUB_USER)
             fetchUserRepositories(githubUser)
         }
+    }
+
+    private fun setAppUsername() {
+        val sp = getSharedPreferences(Constants.APP_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        val personName = sp.getString(Constants.KEY_PERSON_NAME, "User")
+        val headerView = navigationView.getHeaderView(0)
+        headerView.txvName.text = personName
     }
 
     private fun fetchUserRepositories(githubUser: String?) {
@@ -103,7 +114,9 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 if (response.isSuccessful) {
                     Log.i(TAG, "posts loaded from API $response")
                     browsedRepositories = response.body()!!.items
-                    if ((browsedRepositories as MutableList<Repository>?)?.size!! > 0) setupRecyclerView(browsedRepositories) else Util.showMessage(
+                    if ((browsedRepositories as MutableList<Repository>?)?.size!! > 0) setupRecyclerView(
+                        browsedRepositories
+                    ) else Util.showMessage(
                         this@DisplayActivity,
                         "No Items Found"
                     )
