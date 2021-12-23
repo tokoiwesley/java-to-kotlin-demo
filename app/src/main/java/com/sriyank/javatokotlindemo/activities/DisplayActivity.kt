@@ -78,25 +78,16 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun fetchUserRepositories(githubUser: String?) {
         mService!!.searchRepositoriesByUser(githubUser)
-            .enqueue(object : Callback<List<Repository?>?> {
+            .enqueue(object : Callback<List<Repository>> {
                 override fun onResponse(
-                    call: Call<List<Repository?>?>,
-                    response: Response<List<Repository?>?>
+                    call: Call<List<Repository>>,
+                    response: Response<List<Repository>>
                 ) {
-                    if (response.isSuccessful) {
-                        Log.i(TAG, "posts loaded from API $response")
-                        browsedRepositories = response.body()
-                        if (browsedRepositories != null && browsedRepositories!!.size > 0) setupRecyclerView(
-                            browsedRepositories
-                        ) else Util.showMessage(this@DisplayActivity, "No Items Found")
-                    } else {
-                        Log.i(TAG, "Error $response")
-                        Util.showErrorMessage(this@DisplayActivity, response.errorBody())
-                    }
+                    TODO("Not yet implemented")
                 }
 
-                override fun onFailure(call: Call<List<Repository?>?>, t: Throwable) {
-                    Util.showMessage(this@DisplayActivity, t.message)
+                override fun onFailure(call: Call<List<Repository>>, t: Throwable) {
+                    TODO("Not yet implemented")
                 }
             })
     }
