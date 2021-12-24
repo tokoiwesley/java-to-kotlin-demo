@@ -25,9 +25,9 @@ import retrofit2.Response
 import java.util.*
 
 class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private var mDisplayAdapter: DisplayAdapter? = null
+    private var displayAdapter: DisplayAdapter? = null
     private var browsedRepositories: List<Repository?>? = null
-    private var mService: GithubAPIService? = null
+    private var githubAPIService: GithubAPIService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView!!.layoutManager = layoutManager
 
-        mService = RetrofitClient.getGithubAPIService()
+        githubAPIService = RetrofitClient.getGithubAPIService()
 
         navigationView.setNavigationItemSelectedListener(this)
         val drawerToggle = ActionBarDrawerToggle(
@@ -73,7 +73,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun fetchUserRepositories(githubUser: String?) {
-        mService!!.searchRepositoriesByUser(githubUser)
+        githubAPIService!!.searchRepositoriesByUser(githubUser)
             .enqueue(object : Callback<List<Repository>> {
                 override fun onResponse(
                     call: Call<List<Repository>>,
@@ -104,7 +104,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val query: MutableMap<String, String?> = HashMap()
         if (repoLanguage != null && !repoLanguage.isEmpty()) queryRepo += " language:$repoLanguage"
         query["q"] = queryRepo
-        mService!!.searchRepositories(query).enqueue(object : Callback<SearchResponse> {
+        githubAPIService!!.searchRepositories(query).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
@@ -131,8 +131,8 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun setupRecyclerView(items: List<Repository?>?) {
-        mDisplayAdapter = DisplayAdapter(this, items)
-        recyclerView!!.adapter = mDisplayAdapter
+        displayAdapter = DisplayAdapter(this, items)
+        recyclerView!!.adapter = displayAdapter
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -152,7 +152,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun showBrowsedResults() {
-        mDisplayAdapter!!.swap(browsedRepositories)
+        displayAdapter!!.swap(browsedRepositories)
     }
 
     private fun showBookmarks() {
