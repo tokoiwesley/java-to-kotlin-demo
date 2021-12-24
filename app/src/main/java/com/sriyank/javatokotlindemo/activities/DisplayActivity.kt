@@ -83,11 +83,22 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     call: Call<List<Repository>>,
                     response: Response<List<Repository>>
                 ) {
-                    TODO("Not yet implemented")
+                    if (response.isSuccessful) {
+                        Log.i(TAG, "posts loaded from API " + response)
+                        browsedRepositories = response.body()
+                        if (browsedRepositories!!.isNotEmpty()) {
+                            setupRecyclerView(browsedRepositories)
+                        } else {
+                            Util.showMessage(this@DisplayActivity, "No Items Found")
+                        }
+                    } else {
+                        Log.i(TAG, "Error " + response)
+                        Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
+                    }
                 }
 
-                override fun onFailure(call: Call<List<Repository>>, t: Throwable) {
-                    TODO("Not yet implemented")
+                override fun onFailure(call: Call<List<Repository>>?, t: Throwable) {
+                    Util.showMessage(this@DisplayActivity, t.message)
                 }
             })
     }
