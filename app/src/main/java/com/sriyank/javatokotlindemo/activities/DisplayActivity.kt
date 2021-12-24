@@ -10,7 +10,6 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.sriyank.javatokotlindemo.R
-import com.sriyank.javatokotlindemo.activities.DisplayActivity
 import com.sriyank.javatokotlindemo.adapters.DisplayAdapter
 import com.sriyank.javatokotlindemo.app.Constants
 import com.sriyank.javatokotlindemo.app.Util
@@ -18,7 +17,6 @@ import com.sriyank.javatokotlindemo.models.Repository
 import com.sriyank.javatokotlindemo.models.SearchResponse
 import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
 import com.sriyank.javatokotlindemo.retrofit.RetrofitClient
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_display.*
 import kotlinx.android.synthetic.main.header.view.*
 import retrofit2.Call
@@ -30,7 +28,6 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private var mDisplayAdapter: DisplayAdapter? = null
     private var browsedRepositories: List<Repository?>? = null
     private var mService: GithubAPIService? = null
-    private var mRealm: Realm? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +43,6 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         recyclerView!!.layoutManager = layoutManager
 
         mService = RetrofitClient.getGithubAPIService()
-        mRealm = Realm.getDefaultInstance()
 
         navigationView.setNavigationItemSelectedListener(this)
         val drawerToggle = ActionBarDrawerToggle(
@@ -160,12 +156,6 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun showBookmarks() {
-        mRealm!!.executeTransaction { realm ->
-            val repositories = realm.where(
-                Repository::class.java
-            ).findAll()
-            mDisplayAdapter!!.swap(repositories)
-        }
     }
 
     private fun closeDrawer() {
@@ -175,7 +165,6 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onBackPressed() {
         if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) closeDrawer() else {
             super.onBackPressed()
-            mRealm!!.close()
         }
     }
 
