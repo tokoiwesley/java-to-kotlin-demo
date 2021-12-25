@@ -25,9 +25,11 @@ import retrofit2.Response
 import java.util.*
 
 class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private var displayAdapter: DisplayAdapter? = null
-    private var browsedRepositories: List<Repository?>? = null
-    private var githubAPIService: GithubAPIService? = null
+    private lateinit var displayAdapter: DisplayAdapter
+    private var browsedRepositories: List<Repository> = mutableListOf()
+    private val githubAPIService: GithubAPIService by lazy {
+        RetrofitClient.getGithubAPIService()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +43,6 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView!!.layoutManager = layoutManager
-
-        githubAPIService = RetrofitClient.getGithubAPIService()
 
         navigationView.setNavigationItemSelectedListener(this)
         val drawerToggle = ActionBarDrawerToggle(
