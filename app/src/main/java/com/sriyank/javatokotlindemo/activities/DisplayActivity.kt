@@ -19,6 +19,7 @@ import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
 import com.sriyank.javatokotlindemo.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.activity_display.*
 import kotlinx.android.synthetic.main.header.view.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +43,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        recyclerView!!.layoutManager = layoutManager
+        recyclerView.layoutManager = layoutManager
 
         navigationView.setNavigationItemSelectedListener(this)
         val drawerToggle = ActionBarDrawerToggle(
@@ -52,16 +53,17 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.string.drawer_open,
             R.string.drawer_close
         )
-        drawerLayout!!.addDrawerListener(drawerToggle)
+        drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+
         val intent = intent
         if (intent.getIntExtra(Constants.KEY_QUERY_TYPE, -1) == Constants.SEARCH_BY_REPO) {
             val queryRepo = intent.getStringExtra(Constants.KEY_REPO_SEARCH)
             val repoLanguage = intent.getStringExtra(Constants.KEY_LANGUAGE)
-            fetchRepositories(queryRepo, repoLanguage)
+            queryRepo?.let { repoLanguage?.let { it1 -> fetchRepositories(it, it1) } }
         } else {
             val githubUser = intent.getStringExtra(Constants.KEY_GITHUB_USER)
-            fetchUserRepositories(githubUser)
+            githubUser?.let { fetchUserRepositories(it) }
         }
     }
 
@@ -72,17 +74,21 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         headerView.txvName.text = personName
     }
 
-    private fun fetchUserRepositories(githubUser: String?) {
-        githubAPIService!!.searchRepositoriesByUser(githubUser)
+    private fun fetchUserRepositories(githubUser: String) {
+        githubAPIService.searchRepositoriesByUser(githubUser)
             .enqueue(object : Callback<List<Repository>> {
                 override fun onResponse(
-                    call: Call<List<Repository>>,
+                    call: Call<List<Repository>>?,
                     response: Response<List<Repository>>
                 ) {
                     if (response.isSuccessful) {
                         Log.i(TAG, "posts loaded from API " + response)
-                        browsedRepositories = response.body()
-                        if (browsedRepositories!!.isNotEmpty()) {
+
+                        response.body()?.let {
+                            browsedRepositories = it
+                        }
+
+                        if (browsedRepositories.isNotEmpty()) {
                             setupRecyclerView(browsedRepositories)
                         } else {
                             Util.showMessage(this@DisplayActivity, "No Items Found")
@@ -99,25 +105,31 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             })
     }
 
-    private fun fetchRepositories(queryRepo: String?, repoLanguage: String?) {
+    private fun fetchRepositories(queryRepo: String, repoLanguage: String) {
         var queryRepo = queryRepo
+
         val query: MutableMap<String, String?> = HashMap()
-        if (repoLanguage != null && !repoLanguage.isEmpty()) queryRepo += " language:$repoLanguage"
+
+        if (repoLanguage.isNotEmpty())
+            queryRepo += " language:$repoLanguage"
         query["q"] = queryRepo
-        githubAPIService!!.searchRepositories(query).enqueue(object : Callback<SearchResponse> {
+
+        githubAPIService.searchRepositories(query).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
             ) {
                 if (response.isSuccessful) {
                     Log.i(TAG, "posts loaded from API $response")
-                    browsedRepositories = response.body()!!.items
-                    if ((browsedRepositories as MutableList<Repository>?)?.size!! > 0) setupRecyclerView(
-                        browsedRepositories
-                    ) else Util.showMessage(
-                        this@DisplayActivity,
-                        "No Items Found"
-                    )
+
+                    response.body()?.items?.let {
+                        browsedRepositories = it
+                    }
+
+                    if (browsedRepositories.isNotEmpty())
+                        setupRecyclerView(browsedRepositories)
+                    else
+                        Util.showMessage(this@DisplayActivity, "No Items Found")
                 } else {
                     Log.i(TAG, "error $response")
                     Util.showErrorMessage(this@DisplayActivity, response.errorBody())
@@ -130,9 +142,9 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         })
     }
 
-    private fun setupRecyclerView(items: List<Repository?>?) {
+    private fun setupRecyclerView(items: List<Repository>) {
         displayAdapter = DisplayAdapter(this, items)
-        recyclerView!!.adapter = displayAdapter
+        recyclerView.adapter = displayAdapter
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -152,18 +164,18 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private fun showBrowsedResults() {
-        displayAdapter!!.swap(browsedRepositories)
+        displayAdapter.swap(browsedRepositories)
     }
 
     private fun showBookmarks() {
     }
 
     private fun closeDrawer() {
-        drawerLayout!!.closeDrawer(GravityCompat.START)
+        drawerLayout.closeDrawer(GravityCompat.START)
     }
 
     override fun onBackPressed() {
-        if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) closeDrawer() else {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) closeDrawer() else {
             super.onBackPressed()
         }
     }
