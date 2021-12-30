@@ -29,7 +29,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var displayAdapter: DisplayAdapter
     private var browsedRepositories: List<Repository> = mutableListOf()
     private val githubAPIService: GithubAPIService by lazy {
-        RetrofitClient.getGithubAPIService()
+        RetrofitClient.githubAPIService
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
