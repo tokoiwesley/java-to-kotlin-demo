@@ -1,6 +1,3 @@
 package com.sriyank.javatokotlindemo.models
 
-class Owner {
-    var id = 0
-    var login: String? = null
-}
+class Owner(var id: Int, var login: String?)

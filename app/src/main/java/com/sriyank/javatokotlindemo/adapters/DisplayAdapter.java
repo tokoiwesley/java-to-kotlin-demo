@@ -112,7 +112,7 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.MyViewHo
 
 		private void bookmarkRepository(final Repository current) {
 
-			Realm realm = Realm.getDefaultInstance();
+			/*Realm realm = Realm.getDefaultInstance();
 			realm.executeTransactionAsync(new Realm.Transaction() {
 				@Override
 				public void execute(@NonNull Realm realm) {
@@ -129,7 +129,7 @@ public class DisplayAdapter extends RecyclerView.Adapter<DisplayAdapter.MyViewHo
 					Log.i(TAG, error.toString());
 					Util.showMessage(mContext, "Error Occurred");
 				}
-			});
+			});*/
 		}
 	}
 }
