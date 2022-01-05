@@ -1,3 +1,3 @@
 package com.sriyank.javatokotlindemo.models
 
-class ErrorResponse(val message: String?)
+data class ErrorResponse(val message: String?)

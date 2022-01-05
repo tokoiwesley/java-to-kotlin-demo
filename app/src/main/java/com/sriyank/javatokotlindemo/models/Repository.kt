@@ -2,7 +2,7 @@ package com.sriyank.javatokotlindemo.models
 
 import com.google.gson.annotations.SerializedName
 
-class Repository(
+data class Repository(
     var id: Int,
     var name: String?,
     var language: String?,

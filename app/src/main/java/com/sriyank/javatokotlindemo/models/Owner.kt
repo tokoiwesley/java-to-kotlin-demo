@@ -1,3 +1,3 @@
 package com.sriyank.javatokotlindemo.models
 
-class Owner(var id: Int, var login: String?)
+data class Owner(var id: Int, var login: String?)
