@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sriyank.javatokotlindemo.R
-import com.sriyank.javatokotlindemo.adapters.DisplayAdapter
 import com.sriyank.javatokotlindemo.adapters.DisplayAdapter.MyViewHolder
 import com.sriyank.javatokotlindemo.app.Util
 import com.sriyank.javatokotlindemo.models.Repository
@@ -46,7 +45,7 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
         private val stars: TextView
         private val watchers: TextView
         private val forks: TextView
-        private var position = 0
+        private var pos= 0
         private val imgBookmark: ImageView
         private var current: Repository? = null
         fun setData(current: Repository, position: Int) {
@@ -55,7 +54,7 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
             forks.text = current.forks.toString()
             watchers.text = current.watchers.toString()
             stars.text = current.stars.toString()
-            this.position = position
+            this.pos = position
             this.current = current
         }
 
