@@ -13,6 +13,7 @@ import com.sriyank.javatokotlindemo.R
 import com.sriyank.javatokotlindemo.adapters.DisplayAdapter.MyViewHolder
 import com.sriyank.javatokotlindemo.app.Util
 import com.sriyank.javatokotlindemo.models.Repository
+import kotlinx.android.synthetic.main.list_item.view.*
 
 class DisplayAdapter(context: Context, items: List<Repository>) :
     RecyclerView.Adapter<MyViewHolder>() {
@@ -40,20 +41,27 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val name: TextView
-        private val language: TextView
-        private val stars: TextView
-        private val watchers: TextView
-        private val forks: TextView
         private var pos= 0
-        private val imgBookmark: ImageView
         private var current: Repository? = null
+
+        init {
+            itemView.imgBookmark.setOnClickListener { bookmarkRepository(current) }
+            itemView.setOnClickListener {
+                val url = current!!.htmlUrl
+                val webpage = Uri.parse(url)
+                val intent = Intent(Intent.ACTION_VIEW, webpage)
+                if (intent.resolveActivity(mContext.packageManager) != null) {
+                    mContext.startActivity(intent)
+                }
+            }
+        }
+
         fun setData(current: Repository, position: Int) {
-            name.text = current.name
-            language.text = current.language.toString()
-            forks.text = current.forks.toString()
-            watchers.text = current.watchers.toString()
-            stars.text = current.stars.toString()
+            itemView.txvName.text = current.name
+            itemView.txvLanguage.text = current.language.toString()
+            itemView.txvForks.text = current.forks.toString()
+            itemView.txvWatchers.text = current.watchers.toString()
+            itemView.txvStars.text = current.stars.toString()
             this.pos = position
             this.current = current
         }
@@ -78,24 +86,6 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
 					Util.showMessage(mContext, "Error Occurred");
 				}
 			});*/
-        }
-
-        init {
-            name = itemView.findViewById(R.id.txvName)
-            language = itemView.findViewById(R.id.txvLanguage)
-            stars = itemView.findViewById(R.id.txvStars)
-            watchers = itemView.findViewById(R.id.txvWatchers)
-            forks = itemView.findViewById(R.id.txvForks)
-            imgBookmark = itemView.findViewById(R.id.img_bookmark)
-            imgBookmark.setOnClickListener { bookmarkRepository(current) }
-            itemView.setOnClickListener {
-                val url = current!!.htmlUrl
-                val webpage = Uri.parse(url)
-                val intent = Intent(Intent.ACTION_VIEW, webpage)
-                if (intent.resolveActivity(mContext.packageManager) != null) {
-                    mContext.startActivity(intent)
-                }
-            }
         }
     }
 
