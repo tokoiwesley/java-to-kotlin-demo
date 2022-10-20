@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/JavaToKotlinDemo.iml" filepath="$PROJECT_DIR$/.idea/modules/JavaToKotlinDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JavaToKotlinDemo.app.unitTest.iml" />
     </modules>
   </component>
 </project>

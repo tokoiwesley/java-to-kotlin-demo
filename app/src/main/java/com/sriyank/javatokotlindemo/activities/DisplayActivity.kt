@@ -100,7 +100,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 }
 
                 override fun onFailure(call: Call<List<Repository>>?, t: Throwable) {
-                    Util.showMessage(this@DisplayActivity, t.message)
+                    Util.showMessage(this@DisplayActivity, t.message ?: "Error Fetching Results")
                 }
             })
     }
@@ -132,7 +132,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         Util.showMessage(this@DisplayActivity, "No Items Found")
                 } else {
                     Log.i(TAG, "error $response")
-                    Util.showErrorMessage(this@DisplayActivity, response.errorBody())
+                    Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
                 }
             }
 
