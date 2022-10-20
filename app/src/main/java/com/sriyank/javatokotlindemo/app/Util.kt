@@ -1,5 +1,6 @@
 package com.sriyank.javatokotlindemo.app
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -14,13 +15,13 @@ object Util {
         val errorResponse: ErrorResponse
         try {
             errorResponse = gson.fromJson(errorBody.string(), ErrorResponse::class.java)
-            showMessage(context, errorResponse.message!!)
+//            showMessage(context, errorResponse.message!!)
         } catch (e: IOException) {
             Log.i("Exception ", e.toString())
         }
     }
+}
 
-    fun showMessage(context: Context, msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-    }
+fun Activity.toast(msg: String) {
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
