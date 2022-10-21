@@ -13,6 +13,7 @@ import com.sriyank.javatokotlindemo.R
 import com.sriyank.javatokotlindemo.adapters.DisplayAdapter
 import com.sriyank.javatokotlindemo.app.Constants
 import com.sriyank.javatokotlindemo.app.Util
+import com.sriyank.javatokotlindemo.app.toast
 import com.sriyank.javatokotlindemo.models.Repository
 import com.sriyank.javatokotlindemo.models.SearchResponse
 import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
@@ -91,7 +92,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         if (browsedRepositories.isNotEmpty()) {
                             setupRecyclerView(browsedRepositories)
                         } else {
-                            Util.showMessage(this@DisplayActivity, "No Items Found")
+                            toast("No Items Found")
                         }
                     } else {
                         Log.i(TAG, "Error " + response)
@@ -100,7 +101,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 }
 
                 override fun onFailure(call: Call<List<Repository>>?, t: Throwable) {
-                    Util.showMessage(this@DisplayActivity, t.message ?: "Error Fetching Results")
+                    toast(t.message ?: "Error Fetching Results")
                 }
             })
     }
@@ -129,7 +130,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     if (browsedRepositories.isNotEmpty())
                         setupRecyclerView(browsedRepositories)
                     else
-                        Util.showMessage(this@DisplayActivity, "No Items Found")
+                        toast("No Items Found")
                 } else {
                     Log.i(TAG, "error $response")
                     Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
@@ -137,7 +138,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
 
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                Util.showMessage(this@DisplayActivity, t.toString())
+                toast(t.toString())
             }
         })
     }

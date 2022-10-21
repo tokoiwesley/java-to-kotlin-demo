@@ -1,6 +1,5 @@
 package com.sriyank.javatokotlindemo.app
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -22,6 +21,6 @@ object Util {
     }
 }
 
-fun Activity.toast(msg: String) {
+fun Context.toast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }

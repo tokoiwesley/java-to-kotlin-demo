@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sriyank.javatokotlindemo.R
 import com.sriyank.javatokotlindemo.adapters.DisplayAdapter.MyViewHolder
 import com.sriyank.javatokotlindemo.app.Util
+import com.sriyank.javatokotlindemo.app.toast
 import com.sriyank.javatokotlindemo.models.Repository
 import kotlinx.android.synthetic.main.list_item.view.*
 
@@ -32,7 +33,8 @@ class DisplayAdapter(private val context: Context, private var repositoryList: L
     override fun getItemCount(): Int = repositoryList.size
 
     fun swap(dataList: List<Repository>) {
-        if (dataList.isEmpty()) Util.showMessage(context, "No Items Found")
+        if (dataList.isEmpty())
+            context.toast("No Items Found")
         repositoryList = dataList
         notifyDataSetChanged()
     }
