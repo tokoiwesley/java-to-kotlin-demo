@@ -149,18 +149,22 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         menuItem.isChecked = true
-        closeDrawer()
+
         when (menuItem.itemId) {
             R.id.item_bookmark -> {
-                showBookmarks()
-                supportActionBar!!.title = "Showing Bookmarks"
+                consumeMenuEvent({ showBookmarks() }, "Showing Bookmarks")
             }
             R.id.item_browsed_results -> {
-                showBrowsedResults()
-                supportActionBar!!.title = "Showing Browsed Results"
+                consumeMenuEvent({ showBrowsedResults() }, "Showing Browsed Results")
             }
         }
         return true
+    }
+
+    private fun consumeMenuEvent(myFunc: () -> Unit, title: String) {
+        myFunc()
+        closeDrawer()
+        supportActionBar!!.title = title
     }
 
     private fun showBrowsedResults() {
