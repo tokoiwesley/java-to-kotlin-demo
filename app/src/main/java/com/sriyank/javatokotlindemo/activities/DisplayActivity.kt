@@ -12,7 +12,7 @@ import com.google.android.material.navigation.NavigationView
 import com.sriyank.javatokotlindemo.R
 import com.sriyank.javatokotlindemo.adapters.DisplayAdapter
 import com.sriyank.javatokotlindemo.app.Constants
-import com.sriyank.javatokotlindemo.app.Util
+import com.sriyank.javatokotlindemo.app.showErrorMessage
 import com.sriyank.javatokotlindemo.app.toast
 import com.sriyank.javatokotlindemo.models.Repository
 import com.sriyank.javatokotlindemo.models.SearchResponse
@@ -20,11 +20,9 @@ import com.sriyank.javatokotlindemo.retrofit.GithubAPIService
 import com.sriyank.javatokotlindemo.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.activity_display.*
 import kotlinx.android.synthetic.main.header.view.*
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var displayAdapter: DisplayAdapter
@@ -96,7 +94,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         }
                     } else {
                         Log.i(TAG, "Error " + response)
-                        Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
+                        showErrorMessage(response.errorBody()!!)
                     }
                 }
 
@@ -133,7 +131,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         toast("No Items Found")
                 } else {
                     Log.i(TAG, "error $response")
-                    Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
+                    showErrorMessage(response.errorBody()!!)
                 }
             }
 
