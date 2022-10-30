@@ -174,7 +174,10 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun showBookmarks() {
         val realm = Realm.getDefaultInstance()
-        realm.executeTransactionAsync( )
+        realm.executeTransaction { realm ->
+            val bookmarkedRepoList = realm.where(Repository::class.java).findAll()
+            displayAdapter.swap(bookmarkedRepoList)
+        }
     }
 
     private fun closeDrawer() {
